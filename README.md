@@ -1,4 +1,3 @@
-```markdown
 # Ping Me README
 
 ## Overview
@@ -67,4 +66,3 @@ Ping Me is built with a microservices architecture using Golang for API services
 
 ## Conclusion
 Ping Me streamlines the process of meeting and engaging with collaborators, whether affiliated or non-affiliated. By combining powerful features into a single, user-centric platform, Ping Me enhances the value of interactions, ensuring productive and creative dialogues while maintaining comprehensive tracking of all actions and insights.
-```
