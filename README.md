@@ -1,68 +1,139 @@
-# Ping Me README
+# Ping Me - Enterprise Collaboration Platform
 
 ## Overview
-Ping Me is a revolutionary collaboration platform designed to transcend organizational boundaries, enabling meaningful conversations, generating valuable insights, and driving productive actions. By enhancing and combining the capabilities of various standalone business tools, Ping Me offers a unified platform that empowers users to unlock the full potential of their discussions, from initial introductions to post-meeting action tracking.
 
-## Features
-### Pre-Meeting
-- **Accounts Not Bound by Organizational Affiliation:** Users can create accounts independently of any single corporate entity.
-- **NFT Invitations:** Digital business cards facilitate efficient collaboration with new users.
-- **User Profile Generation:** Profiles can be created through self-input or LinkedIn integration.
-- **Proximity Alerts:** Recognize active users nearby and prompt automatic recording and push notifications.
+Ping Me is a revolutionary collaboration platform designed to transcend organizational boundaries, enabling meaningful conversations, generating valuable insights, and driving productive actions. By enhancing and combining the capabilities of various standalone business tools, Ping Me offers a unified platform that empowers users to unlock the full potential of their discussions.
 
-### During Meeting
-- **Live Conversation Recording and Transcription:** Automatically record and transcribe conversations in real-time.
-- **AI-Powered Insights and Prompts:** Enhance discussions with AI-generated insights and prompts.
-- **Invite Additional Users:** Seamlessly invite more participants during live chats.
-- **Data Sharing:** Upload and share data within the chat for AI analysis and interrogation.
+![Overall System Architecture](sequences/pingme-core-overall.png)
 
-### Post-Meeting
-- **Intelligent Summarization and Categorization:** Summarize and categorize key points and action items.
-- **Personalized Insights:** Provide insights based on user profiles.
-- **Third-Party Integration:** Seamlessly integrate with tools like Jira and Monday.com for action tracking.
-- **Historic Chat Access:** Access previous chats for updates and ongoing actions.
-- **Analytical Report Generation:** Generate detailed analytical reports for further analysis.
+## Key Features
 
-### Continuous Engagement
-- **Ongoing Collaboration:** Continue conversations remotely or in-person.
-- **User Invitations:** Continuously invite non-users or new collaborators to join ongoing discussions.
+### Pre-Meeting Capabilities
+- **Organization-Independent Accounts**: Create accounts independently of any corporate entity
+- **NFT-Based Digital Business Cards**: Facilitate efficient collaboration through digital invitations
+- **Intelligent Profile Generation**: 
+  - Self-input or LinkedIn integration
+  - Salesforce data import
+  - Automated validation and processing
+- **Proximity Detection**: Recognize nearby active users with automatic recording and notifications
 
-## Architecture
-Ping Me is built with a microservices architecture using Golang for API services and Flutter for the frontend application. This architecture ensures scalability, flexibility, and efficient handling of various components.
+![Bio Setup Flow](sequences/bio-sequence-with-backend.png)
 
-### Components
-1. **Golang Microservices:**
-   - **Authentication Service:** Manages user authentication and authorization.
-   - **Profile Service:** Handles user profile creation and management.
-   - **Collaboration Service:** Manages live chat, recording, and transcription functionalities.
-   - **AI Insights Service:** Provides AI-driven insights and prompts.
-   - **Integration Service:** Manages integration with third-party tools.
+### Live Meeting Features
+- **Real-Time Recording & Transcription**: Automatic conversation capture and processing
+- **AI-Powered Analysis**: 
+  - Live insights and discussion prompts
+  - Real-time data analysis
+  - Contextual suggestions
+- **Dynamic Participant Management**: Add participants seamlessly during active sessions
+- **Secure Data Sharing**: Upload and analyze data within the chat environment
 
-2. **Flutter Applications:**
-   - **Mobile App:** Provides a seamless and intuitive interface for users to interact with the platform.
-   - **Web App:** Offers the same functionalities as the mobile app for desktop users.
-   - **Android, iOS, macOS, and Windows Apps:** Ensures cross-platform compatibility, allowing users to access the platform from any device.
+![VOIP and Audio Processing](sequences/voip-audio-flow.png)
 
-## User Journeys
+### Post-Meeting Tools
+- **Smart Summary Generation**: 
+  - Key point extraction
+  - Action item categorization
+  - Profile-based insights
+- **Integration Ecosystem**: 
+  - Jira and Monday.com connectivity
+  - Automated action tracking
+  - Cross-platform synchronization
+- **Historical Access**: Review and update previous conversations
+- **Analytics Engine**: Generate comprehensive analytical reports
+
+## Security & Compliance
+
+### Data Protection
+- Multi-level tenant isolation
+- End-to-end encryption
+- Granular access controls
+- Geographic data compliance
+
+![Data Security Architecture](sequences/data-security-boundaries.png)
+
+### Network Security
+- Azure Front Door integration
+- WAF protection
+- Network segmentation
+- Private endpoint connections
+
+![Network Security Model](sequences/network-isolation.png)
+
+## Technical Architecture
+
+### Infrastructure Overview
+- Microservices-based architecture
+- Kubernetes orchestration
+- Multi-region deployment
+- Automated scaling
+
+![Azure Kubernetes Architecture](sequences/azure-k8s-multi-tenant.png)
+
+### Authentication & Authorization
+- Federation support
+- RBAC implementation
+- JWT-based session management
+- Multi-tenant isolation
+
+![Authentication Flow](sequences/auth-federation-flow.png)
+
+### Data Processing Pipeline
+- Real-time audio processing
+- LLM-powered analysis
+- Data anonymization
+- Multi-tier storage
+
+![Data Anonymization Process](sequences/data-anonymization-llm.png)
+
+## Getting Started
+
 ### User Onboarding
-1. **Account Creation:** Users sign up using email or LinkedIn integration.
-2. **Profile Setup:** Users create their profiles or import details from LinkedIn.
-3. **NFT Invitation:** Users send digital business cards to new collaborators.
+1. Create account via email or LinkedIn
+2. Complete profile setup
+3. Generate digital business card
+4. Start collaborating
 
-### During Collaboration
-1. **Initiate Meeting:** Users start a live chat, which is automatically recorded and transcribed.
-2. **Invite Participants:** Users can invite additional participants during the meeting.
-3. **Data Sharing:** Participants upload and share relevant data within the chat.
+### Starting a Meeting
+1. Initialize new session
+2. Invite participants
+3. Enable required features
+4. Begin recording
 
-### Post-Meeting Follow-Up
-1. **Summary and Insights:** The system provides an intelligent summary and personalized insights.
-2. **Action Tracking:** Users track actions through integrated third-party tools.
-3. **Re-Engagement:** Users can revisit old chats, update action items, and continue collaboration.
+### Managing Insights
+1. Review AI-generated summaries
+2. Track action items
+3. Generate reports
+4. Share findings
 
-### Continuous Engagement
-1. **Historic Chat Access:** Users access previous chats for updates and follow-ups.
-2. **Ongoing Invitations:** Users invite new collaborators to join ongoing discussions.
-3. **Report Generation:** Users generate and review analytical reports for detailed insights.
+## Cost Analysis
 
-## Conclusion
-Ping Me streamlines the process of meeting and engaging with collaborators, whether affiliated or non-affiliated. By combining powerful features into a single, user-centric platform, Ping Me enhances the value of interactions, ensuring productive and creative dialogues while maintaining comprehensive tracking of all actions and insights.
+For organizations considering deployment options, we provide detailed cost analysis for both API-based and self-hosted LLM solutions in our [cost comparison document](llm_cost_comparison.md).
+
+## Deployment Options
+
+### Cloud Deployment
+- Azure-native implementation
+- Multi-region support
+- Automatic scaling
+- Managed services integration
+
+### On-Premises
+- Kubernetes-based deployment
+- Private cloud support
+- Hardware optimization
+- Local LLM hosting
+
+## Support & Documentation
+
+For detailed technical documentation, API references, and deployment guides, please visit our [documentation portal](https://docs.pingme.com).
+
+For support inquiries:
+- Technical Support: support@pingme.com
+- Sales Inquiries: sales@pingme.com
+- General Questions: info@pingme.com
+
+## License
+
+Copyright © 2024 Ping Me Technologies Ltd.
+All rights reserved.
