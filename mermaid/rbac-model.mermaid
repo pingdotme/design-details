@@ -1,0 +1,43 @@
+classDiagram
+    class Tenant {
+        +TenantId
+        +Name
+        +Config
+        +SecurityPolicy
+    }
+    
+    class User {
+        +UserId
+        +TenantId
+        +Roles[]
+        +Permissions[]
+    }
+    
+    class Role {
+        +RoleId
+        +TenantId
+        +Name
+        +Permissions[]
+    }
+    
+    class Permission {
+        +PermissionId
+        +TenantId
+        +Resource
+        +Action
+        +Constraints
+    }
+    
+    class Resource {
+        +ResourceId
+        +TenantId
+        +Type
+        +SecurityLevel
+    }
+    
+    Tenant "1" -- "many" User
+    Tenant "1" -- "many" Role
+    Tenant "1" -- "many" Permission
+    User "many" -- "many" Role
+    Role "many" -- "many" Permission
+    Permission "many" -- "1" Resource

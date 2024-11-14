@@ -1,0 +1,49 @@
+flowchart TD
+    subgraph "Tenant Data Management"
+        subgraph "Identity & Access"
+            MI[Managed Identity]
+            POD_ID[Pod Identity]
+            AAD[Azure AD]
+        end
+
+        subgraph "Data Access Patterns"
+            subgraph "CosmosDB"
+                CONTAINER[Container per Tenant]
+                RBAC_DB[Database RBAC]
+                KEYS_DB[Tenant Keys]
+            end
+
+            subgraph "Blob Storage"
+                CONTAINERS[Tenant Containers]
+                SAS[SAS Policies]
+                ENCRYPT[Encryption]
+            end
+
+            subgraph "Redis Cache"
+                REDIS_DB[Tenant DBs]
+                REDIS_KEYS[Key Prefixes]
+            end
+        end
+
+        subgraph "Security Controls"
+            CMK[Customer Managed Keys]
+            DEK[Data Encryption Keys]
+            ROTATION[Key Rotation]
+        end
+    end
+
+    MI --> POD_ID
+    POD_ID --> CONTAINER
+    POD_ID --> CONTAINERS
+    POD_ID --> REDIS_DB
+    
+    AAD --> RBAC_DB
+    RBAC_DB --> KEYS_DB
+    KEYS_DB --> CMK
+    CMK --> DEK
+    DEK --> ROTATION
+
+    classDef identity fill:#84b6f4,stroke:#333,stroke-width:2px,color:#fff;
+    class MI,POD_ID,AAD identity;
+    classDef security fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff;
+    class CMK,DEK,ROTATION,ENCRYPT security;

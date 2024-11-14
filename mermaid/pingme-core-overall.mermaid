@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant C as Client (Mobile/Web/Desktop)
+    participant API as PingMe Core API
+    participant Auth as Auth Service
+    participant IdP as Identity Provider
+    participant Org as Org Service
+    participant GAL as GAL Service
+    participant VOIP as VOIP Service
+    participant AS as Audio Service
+    participant TS as Transcription Service
+    participant IS as Insight Service
+    participant LLM as Organization LLM
+    participant DB as Database
+
+    C->>API: Initialize Service
+    API->>Auth: Verify Tenant Context
+    Auth->>IdP: Validate Federation
+    IdP->>Auth: Return Token
+    Auth->>API: Return Session
+
+    API->>Org: Get Organization Context
+    Org->>GAL: Fetch Directory
+    GAL->>Org: Return User Directory
+    Org->>API: Return Org Context
+
+    C->>VOIP: Initialize Call
+    VOIP->>AS: Start Dual Stream Recording
+    AS->>TS: Stream Audio
+    TS->>IS: Process Transcription
+    IS->>API: Store Insights
+    
+    API->>LLM: Update Training Data
+    LLM->>API: Confirm Update
+    
+    API->>DB: Store Analytics
+    DB->>API: Confirm Storage
+    
+    API->>C: Return Results

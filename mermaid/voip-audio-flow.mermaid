@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant C as Client
+    participant VOIP as VOIP Service
+    participant AS as Audio Service
+    participant TS as Transcription Service
+    participant IS as Insight Service
+    participant DB as Database
+
+    C->>VOIP: Initialize Call
+    VOIP->>AS: Create Dual Stream Session
+    AS->>AS: Initialize Buffers
+    AS->>C: Return Stream URLs
+
+    par Stream 1
+        C->>AS: Stream Local Audio
+    and Stream 2
+        VOIP->>AS: Stream Remote Audio
+    end
+
+    loop Audio Processing
+        AS->>TS: Process Audio Chunks
+        TS->>TS: Convert Speech to Text
+        TS->>IS: Send Text Segments
+        IS->>IS: Generate Real-time Insights
+        IS->>C: Stream Results
+    end
+
+    C->>VOIP: End Call
+    VOIP->>AS: Close Streams
+    AS->>TS: Finalize Processing
+    TS->>IS: Generate Final Transcript
+    IS->>DB: Store Call Data
+    DB->>IS: Confirm Storage

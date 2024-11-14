@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant C as Client
+    participant WAF as WAF/Gateway
+    participant API as API Gateway
+    participant Auth as Auth Service
+    participant TM as Tenant Manager
+    participant DS as Data Service
+    participant Enc as Encryption Service
+    
+    C->>WAF: Request with JWT
+    WAF->>WAF: Validate IP/Geo
+    WAF->>API: Forward Request
+    
+    API->>Auth: Validate Token
+    Auth->>TM: Get Tenant Context
+    TM->>Auth: Return Tenant Config
+    
+    Auth->>API: Return Context
+    
+    API->>DS: Request with Context
+    DS->>Enc: Get Tenant Key
+    Enc->>DS: Return Key
+    
+    DS->>DS: Apply Tenant Filter
+    DS->>API: Return Data
+    
+    API->>C: Filtered Response
+
+    note over C,API: All requests scoped to tenant

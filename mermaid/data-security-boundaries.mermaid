@@ -1,0 +1,36 @@
+flowchart TD
+    subgraph Access Control
+        JWT[JWT with Claims]
+        RBAC[RBAC Policies]
+        TID[Tenant ID]
+    end
+
+    subgraph Tenant Isolation
+        subgraph Data Classification
+            L1[Level 1 - Tenant Private]
+            L2[Level 2 - Anonymized]
+            L3[Level 3 - Aggregate]
+        end
+
+        subgraph Storage Patterns
+            SP1[Dedicated Schema]
+            SP2[Tenant ID Column]
+            SP3[Encryption Keys]
+        end
+    end
+
+    subgraph LLM Training Data
+        LT1[Tenant Specific]
+        LT2[Industry Shared]
+        LT3[Global Insights]
+    end
+
+    JWT --> SP1
+    JWT --> SP2
+    TID --> SP3
+    RBAC --> L1
+    RBAC --> L2
+    RBAC --> L3
+    L1 --> LT1
+    L2 --> LT2
+    L3 --> LT3

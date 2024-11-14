@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant API as PingMe Core API
+    participant IS as Insight Service
+    participant AS as Analytics Service
+    participant LLM as Organization LLM
+    participant KB as Knowledge Base
+    participant DB as Database
+
+    API->>IS: Request Org Insights
+    IS->>DB: Fetch Call Data
+    DB->>IS: Return Call History
+    
+    IS->>AS: Process Agent Metrics
+    AS->>AS: Generate Performance Analytics
+    AS->>IS: Return Agent Insights
+    
+    IS->>LLM: Update Training Data
+    LLM->>DB: Fetch Historical Context
+    DB->>LLM: Return Context
+    
+    LLM->>LLM: Fine-tune Model
+    LLM->>KB: Update Knowledge Base
+    
+    par Analytics Updates
+        AS->>API: Return Agent Performance
+        IS->>API: Return Call Insights
+        KB->>API: Return Updated Knowledge
+    end
+    
+    API->>DB: Store Combined Insights
+    DB->>API: Confirm Storage
+
+    note over API,DB: Regular Batch Processing for Org-wide Analytics

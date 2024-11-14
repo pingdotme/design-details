@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant C as Client
+    participant API as PingMe Core API
+    participant Auth as Auth Service
+    participant IdP as Identity Provider
+    participant Org as Org Service
+    participant DB as Database
+
+    C->>API: Initialize Authentication
+    API->>Auth: Start Auth Flow
+    Auth->>C: Present Login Options
+
+    C->>Auth: Select Federation Provider
+    Auth->>IdP: Request Authorization
+    IdP->>C: Show Login Page
+    C->>IdP: Provide Credentials
+    IdP->>Auth: Return OAuth Token
+    
+    Auth->>API: Validate Token
+    API->>DB: Check Organization Mapping
+    DB->>API: Return Org Config
+    
+    API->>Org: Create/Update Session
+    Org->>API: Return Org Context
+    
+    API->>Auth: Generate Session Token
+    Auth->>C: Return Auth Response
+
+    note over C,DB: Session Established with Org Context

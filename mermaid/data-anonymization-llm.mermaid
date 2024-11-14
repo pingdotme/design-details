@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant AS as Audio Service
+    participant TS as Transcription Service
+    participant AN as Anonymizer
+    participant VS as Validation Service
+    participant LLM as LLM Service
+    participant KB as Knowledge Base
+    
+    AS->>TS: Raw Transcript
+    TS->>AN: Process Text
+    
+    AN->>AN: Remove PII
+    AN->>AN: Replace Identifiers
+    AN->>VS: Validate Anonymization
+    
+    VS->>VS: Check Confidence
+    VS->>AN: Confirm Clean
+    
+    par Tenant Specific
+        AN->>LLM: Store Private Data
+        LLM->>KB: Update Tenant KB
+    and Industry Shared
+        AN->>VS: Validate Sharing Rules
+        VS->>LLM: Store Shared Data
+        LLM->>KB: Update Industry KB
+    and Global Analytics
+        AN->>VS: Validate Global Rules
+        VS->>LLM: Store Global Data
+        LLM->>KB: Update Global KB
+    end

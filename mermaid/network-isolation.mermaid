@@ -1,0 +1,44 @@
+flowchart TD
+    subgraph "Network Security"
+        subgraph "Azure Front Door"
+            AFD[Front Door]
+            WAF[WAF Policies]
+            RULES[Custom Rules]
+        end
+
+        subgraph "Virtual Network"
+            subgraph "Network Segmentation"
+                AKS_CIDR[AKS CIDR: 10.0.0.0/16]
+                POD_CIDR[Pod CIDR: 10.1.0.0/16]
+                SVC_CIDR[Service CIDR: 10.2.0.0/16]
+            end
+
+            subgraph "Network Policies"
+                TENANT_ISO[Tenant Isolation]
+                INGRESS_POL[Ingress Rules]
+                EGRESS_POL[Egress Rules]
+            end
+
+            subgraph "NSG Rules"
+                INBOUND[Inbound Security]
+                OUTBOUND[Outbound Security]
+                ASG[Application Security Groups]
+            end
+        end
+
+        subgraph "Private Links"
+            PL_COSMOS[CosmosDB Link]
+            PL_STORAGE[Storage Link]
+            PL_KV[KeyVault Link]
+        end
+    end
+
+    AFD --> RULES
+    RULES --> AKS_CIDR
+    AKS_CIDR --> TENANT_ISO
+    TENANT_ISO --> PL_COSMOS
+    TENANT_ISO --> PL_STORAGE
+    TENANT_ISO --> PL_KV
+
+    classDef security fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff;
+    class WAF,RULES,TENANT_ISO,INGRESS_POL,EGRESS_POL,INBOUND,OUTBOUND,ASG security;

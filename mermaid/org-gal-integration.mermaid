@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant API as PingMe Core API
+    participant Org as Org Service
+    participant GAL as GAL Service
+    participant IdP as Identity Provider
+    participant DB as Database
+
+    API->>Org: Initialize Org Context
+    Org->>IdP: Get Tenant Info
+    IdP->>Org: Return Tenant Details
+    
+    Org->>GAL: Request Directory Sync
+    GAL->>IdP: Validate Tenant Access
+    IdP->>GAL: Confirm Access
+    
+    GAL->>GAL: Fetch Directory
+    GAL->>Org: Stream User Data
+    
+    Org->>DB: Update User Directory
+    DB->>Org: Confirm Update
+    
+    Org->>API: Return Updated Context
+    
+    loop Directory Sync
+        GAL->>Org: Push Directory Updates
+        Org->>DB: Update Records
+    end

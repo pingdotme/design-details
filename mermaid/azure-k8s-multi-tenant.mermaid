@@ -1,0 +1,101 @@
+flowchart TD
+    subgraph "Azure Global Load Balancer"
+        AGLB[Azure Front Door]
+        WAF[WAF Policy]
+    end
+
+    subgraph "Azure Region - North Europe"
+        subgraph "Management Resource Group - EU"
+            KV_EU[Key Vault]
+            MONITOR_EU[Azure Monitor]
+            LOG_EU[Log Analytics]
+        end
+
+        subgraph "Network Resource Group - EU"
+            VNET_EU[Virtual Network]
+            subgraph "AKS Network - EU"
+                AKS_SUBNET_EU[AKS Subnet]
+                POD_SUBNET_EU[Pod Subnet]
+                SVC_SUBNET_EU[Service Subnet]
+                APIM_SUBNET_EU[APIM Subnet]
+            end
+            subgraph "Data Network - EU"
+                DATA_SUBNET_EU[Data Subnet]
+                PVT_EP_SUBNET_EU[Private Endpoint Subnet]
+            end
+            NSG_EU[NSG Rules]
+            UDR_EU[Route Tables]
+        end
+
+        subgraph "AKS Resource Group - EU"
+            subgraph "AKS Cluster - EU"
+                subgraph "System Node Pool - EU"
+                    INGRESS_EU[Ingress Controller]
+                    CERT_MGR_EU[Cert Manager]
+                    PROM_EU[Prometheus]
+                end
+
+                subgraph "Tenant Node Pools - EU"
+                    subgraph "Premium Tier - EU"
+                        PREM_NS_1_EU[Tenant 1 Namespace]
+                        PREM_NS_2_EU[Tenant 2 Namespace]
+                    end
+                    subgraph "Standard Tier - EU"
+                        STD_NS_1_EU[Tenant 3 Namespace]
+                        STD_NS_2_EU[Tenant 4 Namespace]
+                    end
+                end
+
+                subgraph "Shared Services Pool - EU"
+                    API_NS_EU[API Gateway NS]
+                    AUTH_NS_EU[Auth Service NS]
+                    VOIP_NS_EU[VOIP Service NS]
+                end
+            end
+        end
+
+        subgraph "Data Resource Group - EU"
+            subgraph "Storage Services - EU"
+                COSMOS_EU[CosmosDB]
+                STORAGE_EU[Blob Storage]
+                REDIS_EU[Redis Cache]
+            end
+            subgraph "Analytics Services - EU"
+                EVENTHUB_EU[Event Hub]
+                COGNITIVE_EU[Cognitive Services]
+            end
+        end
+    end
+
+    subgraph "Identity & Access"
+        MI[Managed Identity]
+        subgraph "RBAC & Policies"
+            POD_ID[Pod Identity]
+            NS_RBAC[Namespace RBAC]
+            NET_POL[Network Policies]
+        end
+    end
+
+    %% Network Flow
+    AGLB --> INGRESS_EU
+    INGRESS_EU --> API_NS_EU
+    API_NS_EU --> |Network Policy| PREM_NS_1_EU
+    API_NS_EU --> |Network Policy| PREM_NS_2_EU
+    API_NS_EU --> |Network Policy| STD_NS_1_EU
+    API_NS_EU --> |Network Policy| STD_NS_2_EU
+
+    %% Identity Flow
+    MI --> POD_ID
+    POD_ID --> PREM_NS_1_EU
+    POD_ID --> PREM_NS_2_EU
+    POD_ID --> STD_NS_1_EU
+    POD_ID --> STD_NS_2_EU
+
+    %% Data Access
+    PREM_NS_1_EU --> |Private Endpoint| COSMOS_EU
+    PREM_NS_2_EU --> |Private Endpoint| COSMOS_EU
+    STD_NS_1_EU --> |Private Endpoint| COSMOS_EU
+    STD_NS_2_EU --> |Private Endpoint| COSMOS_EU
+
+    classDef azure fill:#0072C6,stroke:#fff,stroke-width:2px,color:#fff;
+    class AGLB,KV_EU,MONITOR_EU,LOG_EU,COSMOS_EU,STORAGE_EU,REDIS_EU,EVENTHUB_EU,COGNITIVE_EU azure;

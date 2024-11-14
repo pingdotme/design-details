@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant C as Client
+    participant GLB as Global LB
+    participant GEO as Geo Service
+    participant COM as Compliance Service
+    participant API as Regional API
+    participant DS as Data Service
+    
+    C->>GLB: Initial Request
+    GLB->>GEO: Check Location
+    GEO->>COM: Check Regulations
+    COM->>GEO: Return Requirements
+    
+    alt EU Request
+        GEO->>GLB: Route to EU
+        GLB->>API: Forward to EU
+        API->>DS: Apply GDPR Rules
+    else US Request
+        GEO->>GLB: Route to US
+        GLB->>API: Forward to US
+        API->>DS: Apply US Rules
+    else Restricted
+        GEO->>GLB: Block Request
+        GLB->>C: Return Restriction
+    end
