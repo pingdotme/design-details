@@ -1,0 +1,60 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant DB as Database
+    participant T as Transcription Service
+    participant AI as AI Analysis Service
+    participant S as Storage
+
+    U->>A: Access App Features
+    A->>API: GET /api/subscription/status
+    API->>DB: Check Subscription Level
+    DB->>API: Return Subscription Info
+    API->>A: Return Access Level
+
+    alt Guest Access
+        A->>API: GET /api/meetings/shared
+        API->>DB: Fetch Shared Meetings
+        DB->>API: Return Limited Data
+        API->>A: Return Filtered Data
+        A->>U: Show Read-Only Interface
+        U->>A: View Shared Meeting
+        A->>API: POST /api/analytics/log-access
+        API->>DB: Log Access
+    else Basic Subscription
+        A->>U: Show Basic Interface
+        U->>A: Start Recording
+        A->>API: POST /api/recordings/start
+        API->>S: Initialize Storage
+        S->>API: Return Storage URL
+        API->>A: Return Upload URL
+        A->>S: Stream Recording
+        A->>API: POST /api/recordings/complete
+        API->>T: Request Transcription
+        T->>API: Return Basic Transcript
+        API->>DB: Store Transcript
+        API->>AI: Request Basic Analysis
+        AI->>API: Return Basic Insights
+        API->>A: Return Results
+        A->>U: Display Results
+    else Premium Subscription
+        A->>U: Show Premium Interface
+        U->>A: Start Enhanced Recording
+        A->>API: POST /api/recordings/start-premium
+        API->>S: Initialize HD Storage
+        S->>API: Return Storage URL
+        API->>A: Return Upload URL
+        A->>S: Stream HD Recording
+        A->>API: POST /api/recordings/complete
+        API->>T: Request Advanced Transcription
+        T->>API: Return Detailed Transcript
+        API->>DB: Store Transcript
+        API->>AI: Request Advanced Analysis
+        AI->>DB: Fetch User Context
+        DB->>AI: Return User Profile
+        AI->>API: Return Personalized Insights
+        API->>A: Return Enhanced Results
+        API->>DB: Update User Context
+        A->>U: Display Enhanced Results
+    end

@@ -1,0 +1,45 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant F as Firebase
+    participant P as OAuth Provider
+    participant E as Email Service
+    participant DB as Database
+
+    U->>A: Launch App
+    A->>F: Check Auth State
+    F->>A: Return Auth Status
+
+    alt No Active Session
+        A->>U: Display Login Options
+        
+        alt Federated Login
+            U->>A: Select OAuth Provider
+            A->>F: Initialize OAuth Flow
+            F->>P: Request Authorization
+            P->>U: Show Login Page
+            U->>P: Enter Credentials
+            P->>F: Return OAuth Token
+            F->>A: Return Firebase Token
+            A->>API: POST /api/auth/verify
+            API->>F: Verify Token
+            F->>API: Token Valid
+            API->>DB: Create/Update Session
+            API->>A: Return Session Token
+            A->>F: Store Auth State
+        else Magic Link
+            U->>A: Enter Email
+            A->>API: POST /api/auth/magic-link
+            API->>F: Request Magic Link
+            F->>E: Generate Magic Link
+            E->>U: Send Email with Link
+            U->>F: Click Magic Link
+            F->>API: Validate Link
+            API->>DB: Create/Update Session
+            API->>A: Return Session Token
+            A->>F: Store Auth State
+        end
+    end
+
+    A->>U: Proceed to Main App

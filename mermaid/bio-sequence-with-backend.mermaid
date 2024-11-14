@@ -1,0 +1,47 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant DB as Database
+    participant L as LinkedIn API
+    participant S as Salesforce API
+    participant V as Validation Service
+
+    U->>A: Start Bio Setup
+    A->>API: GET /api/bio/options
+    API->>A: Return Available Import Options
+    A->>U: Show Import Options
+
+    alt Manual Entry
+        U->>A: Enter Bio Details
+        A->>API: POST /api/bio/validate
+        API->>V: Validate Input
+        V->>API: Return Validation Result
+        API->>A: Return Validation Status
+    else LinkedIn Import
+        U->>A: Choose LinkedIn
+        A->>API: POST /api/bio/linkedin/auth
+        API->>L: Request Authorization
+        L->>U: Show Consent Screen
+        U->>L: Grant Permission
+        L->>API: Return Profile Data
+        API->>V: Validate Data
+        V->>API: Return Validation Result
+        API->>A: Return Processed Data
+    else Salesforce Import
+        U->>A: Choose Salesforce
+        A->>API: POST /api/bio/salesforce/auth
+        API->>S: Request Authorization
+        S->>U: Show Consent Screen
+        U->>S: Grant Permission
+        S->>API: Return Profile Data
+        API->>V: Validate Data
+        V->>API: Return Validation Result
+        API->>A: Return Processed Data
+    end
+
+    A->>API: POST /api/bio/save
+    API->>DB: Store Validated Bio
+    DB->>API: Confirm Storage
+    API->>A: Return Success
+    A->>U: Show Completion

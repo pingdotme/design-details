@@ -1,0 +1,56 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant Auth as Auth Service
+    participant DB as Database
+    participant S as Storage
+
+    U->>A: Launch Application
+    A->>Auth: Check Auth Status
+    
+    alt No Active Session
+        A->>U: Show Login Options
+        U->>A: Choose Login Method
+        A->>Auth: Authenticate User
+        Auth->>A: Return Auth Token
+        A->>API: Validate Token
+        API->>A: Return Session Info
+    end
+
+    A->>API: Check User Status
+    API->>DB: Query User Data
+    DB->>API: Return User Status
+    API->>A: Return First Time Status
+    
+    alt First Time User
+        A->>U: Show Bio Setup
+        U->>A: Provide Bio Info
+        A->>API: POST /api/users/bio
+        API->>DB: Store Bio Data
+        DB->>API: Confirm Storage
+        API->>A: Return Success
+    end
+    
+    A->>API: GET /api/users/profile
+    API->>DB: Fetch User Type & Subscription
+    DB->>API: Return User Data
+    API->>A: Return Profile Data
+    
+    alt Guest User
+        A->>API: GET /api/meetings/shared
+        API->>DB: Query Shared Meetings
+        DB->>API: Return Limited Access Data
+        API->>A: Return Filtered Data
+    else Subscribed User
+        A->>API: GET /api/meetings
+        API->>DB: Query Full Meeting Data
+        DB->>API: Return Complete Data
+        API->>A: Return Meeting Data
+        A->>API: GET /api/preferences
+        API->>S: Fetch User Preferences
+        S->>API: Return Preferences
+        API->>A: Return User Settings
+    end
+    
+    A->>U: Display Appropriate Interface
