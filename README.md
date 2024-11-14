@@ -15,8 +15,9 @@ Ping Me is a revolutionary collaboration platform designed to transcend organiza
   - Self-input or LinkedIn integration
   - Salesforce data import
   - Automated validation and processing
-- **Proximity Detection**: Recognize nearby active users with automatic recording and notifications
+  - **Advanced Profile Enrichment**: Continuous learning from user interactions
 
+![Profile Enrichment Flow](sequences/profile-enrichment-sequence-with-backend.png)
 ![Bio Setup Flow](sequences/bio-sequence-with-backend.png)
 
 ### Live Meeting Features
@@ -68,6 +69,7 @@ Ping Me is a revolutionary collaboration platform designed to transcend organiza
 - Multi-region deployment
 - Automated scaling
 
+![High Level Architecture](sequences/high-level-architecture.png)
 ![Azure Kubernetes Architecture](sequences/azure-k8s-multi-tenant.png)
 
 ### Authentication & Authorization
@@ -83,8 +85,10 @@ Ping Me is a revolutionary collaboration platform designed to transcend organiza
 - LLM-powered analysis
 - Data anonymization
 - Multi-tier storage
+- **Adaptive Learning**: Personalized model training based on user interactions
 
 ![Data Anonymization Process](sequences/data-anonymization-llm.png)
+![User Model Retraining Flow](sequences/user-model-retraining.png)
 
 ## Getting Started
 
