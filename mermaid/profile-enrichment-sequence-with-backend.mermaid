@@ -1,0 +1,63 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant DB as Database
+    participant L as LinkedIn API
+    participant AI as AI Service
+    participant V as Validation Service
+    participant C as Context Engine
+
+    U->>A: Access Profile Enrichment
+    A->>API: GET /api/integrations/available
+    API->>A: Return Integration Options
+
+    alt LinkedIn Integration
+        U->>A: Select LinkedIn
+        A->>API: POST /api/integrations/linkedin/auth
+        API->>L: Request Authorization
+        L->>U: Show Consent Screen
+        U->>L: Grant Permission
+        L->>API: Return OAuth Token
+        
+        par Profile Data Fetch
+            API->>L: Fetch Professional History
+            L->>API: Return Work Experience
+            
+            API->>L: Fetch Skills & Endorsements
+            L->>API: Return Skills Data
+            
+            API->>L: Fetch Education
+            L->>API: Return Education Data
+        end
+
+        API->>V: Validate Enrichment Data
+        V->>API: Return Validated Data
+        
+        API->>DB: Store Enriched Profile
+        API->>C: Process New Context
+        
+        par Context Analysis
+            C->>DB: Fetch Existing Meetings
+            DB->>C: Return Meeting History
+            C->>AI: Update User Context Model
+            AI->>C: Return Updated Model
+            
+            C->>AI: Generate New Insight Rules
+            AI->>C: Return Personalization Rules
+        end
+        
+        C->>DB: Store Updated Context
+        API->>A: Return Success
+        A->>U: Show Updated Profile
+
+        opt Reprocess Previous Meetings
+            A->>API: POST /api/meetings/reanalyze
+            API->>DB: Fetch Recent Meetings
+            DB->>API: Return Meeting Data
+            API->>AI: Reprocess with New Context
+            AI->>DB: Store Updated Insights
+            API->>A: Return Updated Insights
+            A->>U: Show Refined Results
+        end
+    end

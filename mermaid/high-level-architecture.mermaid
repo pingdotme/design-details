@@ -1,0 +1,55 @@
+---
+config:
+  layout: dagre
+---
+flowchart TD
+    A["Flutter App"] --> B["API Gateway"]
+    B --> C["Action Service"] & D["Backend Service"] & E["Audio Processing Service"]
+    D --> G["Firebase/Auth"] & R[("Redis - Active Meetings")]
+    C --> F[("Redis Queue")]
+    F --> H["Integration Service 1"] & I["Integration Service 2"] & J["Integration Service 3"]
+    H --> K["Jira"]
+    I --> L["Trello"]
+    J --> M["Workday"]
+    E --> N["Transcription Service"]
+    N --> O["Insights Service"]
+    O -.-> R
+    O --> P["Hosted / Paid LLM"]
+    R -.-> Q[("Primary Database")]
+    
+    %% New Components for Custom Model Training
+    O --> T["Training Service"]
+    T --> U[("Model Registry")]
+    T --> V["Training Queue"]
+    V --> W["Training Workers"]
+    W --> P
+    W --> U
+    
+     A:::client
+     B:::gateway
+     C:::service
+     D:::gateway
+     E:::service
+     G:::external
+     R:::database
+     F:::database
+     H:::service
+     I:::service
+     J:::service
+     K:::external
+     L:::external
+     M:::external
+     N:::service
+     O:::service
+     P:::external
+     Q:::database
+     T:::service
+     U:::database
+     V:::database
+     W:::service
+    classDef client fill:#FFD700,stroke:#333,stroke-width:2px
+    classDef gateway fill:#4682B4,stroke:#333,stroke-width:2px
+    classDef service fill:#3CB371,stroke:#333,stroke-width:2px
+    classDef database fill:#FF6347,stroke:#333,stroke-width:2px
+    classDef external fill:#A9A9A9,stroke:#333,stroke-width:2px
+    classDef monitoring fill:#98FB98,stroke:#333,stroke-width:2px 

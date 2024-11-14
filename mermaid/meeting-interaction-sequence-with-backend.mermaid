@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant DB as Database
+    participant T as Transcription
+    participant AI as AI Service
+    participant N as Notification Service
+
+    U->>A: Start Meeting
+    A->>API: POST /api/meetings/create
+    API->>DB: Create Meeting Session
+    DB->>API: Return Session ID
+    
+    alt Share with Guest
+        U->>A: Share Meeting
+        A->>API: POST /api/meetings/share
+        API->>DB: Create Share Link
+        API->>N: Send Invitation
+        N->>U: Notify Recipients
+    end
+
+    U->>A: Record Meeting
+    A->>API: Stream Audio
+    API->>T: Process Audio
+    T->>API: Return Real-time Transcript
+    
+    par Real-time Processing
+        API->>AI: Analyze Conversation
+        AI->>API: Return Live Insights
+        API->>A: Stream Updates
+        A->>U: Show Live Feedback
+    end
+
+    U->>A: End Meeting
+    A->>API: POST /api/meetings/complete
+    API->>T: Finalize Transcript
+    API->>AI: Generate Final Analysis
+    API->>DB: Store Meeting Data
+    API->>A: Return Summary
+    A->>U: Display Results

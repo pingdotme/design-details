@@ -1,0 +1,59 @@
+sequenceDiagram
+    participant U as User
+    participant A as Mobile App
+    participant API as Backend API
+    participant IS as Insights Service
+    participant TS as Training Service
+    participant DB as Primary Database
+    participant MR as Model Registry
+    participant TQ as Training Queue
+    participant TW as Training Workers
+    participant LLM as Hosted LLM
+
+    %% Meeting Completion Triggers Training
+    Note over U,LLM: Meeting has just ended
+    API->>IS: Process Meeting Summary
+    IS->>DB: Fetch User's Historical Data
+    DB->>IS: Return Meeting History
+    
+    IS->>TS: Request Model Evaluation
+    TS->>MR: Fetch Current Model Metrics
+    MR->>TS: Return Performance Data
+    
+    alt Retraining Needed
+        TS->>DB: Fetch Training Data
+        DB->>TS: Return Processed Meetings
+        TS->>TQ: Queue Training Job
+        
+        TQ->>TW: Assign Training Task
+        
+        par Training Process
+            TW->>LLM: Fine-tune Base Model
+            TW->>MR: Log Training Progress
+            MR->>TS: Stream Progress Updates
+            TS->>API: Update Training Status
+            API->>A: Push Progress Notification
+            A->>U: Show Training Progress
+        end
+        
+        LLM->>TW: Return Updated Model
+        TW->>MR: Store New Model Version
+        TW->>TS: Confirm Training Complete
+        
+        TS->>IS: Update Active Model
+        IS->>API: Notify Training Complete
+        API->>A: Push Completion Notice
+        A->>U: Show Training Complete
+        
+        opt Reprocess Recent Meetings
+            TS->>IS: Request Meeting Reanalysis
+            IS->>DB: Fetch Recent Meetings
+            DB->>IS: Return Meeting Data
+            IS->>LLM: Process with New Model
+            LLM->>IS: Return Updated Insights
+            IS->>DB: Store New Insights
+            IS->>API: Return Updated Analysis
+            API->>A: Push Updates Available
+            A->>U: Show Refined Insights
+        end
+    end
